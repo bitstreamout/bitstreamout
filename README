@@ -1,0 +1,30 @@
+
+      The bitstreamout plugin for VDR
+      ===============================
+
+What it is:
+A plugin which receive the data stream of AC3 (Dolby Digital[tm]),
+DTS[tm] (Digital Theater System[tm]), and linear PCM in playback
+and live mode of VDR.  The data received is send to the S/P-DIF
+of the sound card.  Whereby the none PCM data is embedded into
+an appropriate PCM data stream to ensure that the A/V receiver with
+its decoder unit is able to handle the data therein.  For a full
+description read the file Description.
+
+What is not:
+This plugin does _not_ decode any data received. This because the
+author do not want not injure any patent, intellectual property
+and/or license of the Dolby Labs Inc. nor those from DTS[tm].
+This is the reason why you need a legal hardware or software
+decoder, e.g. a A/V receiver of amplifier connected on the S/P-DIF
+of your sound card or a sound card which is able to decode the
+data stream.   For the last case you may modify on of the
+mute scripts found in the directory mute/.
+
+How to install:
+Read the file INSTALL.
+
+Problems:
+Read the file PROBLEMS.
+
+//Werner Fink

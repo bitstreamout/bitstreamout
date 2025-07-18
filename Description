@@ -1,0 +1,39 @@
+This project implements a plugin for the Video Disk Recorder also called "VDR"
+(see http://www.cadsoft.de/people/kls/vdr) to support the bitstreamout of
+Dolby Digital audio streams also called "AC-3" or "A52" through the S/P-DIF
+out plug of a sound card support by ALSA (Advanced Linux Sound Architecture,
+see http://www.alsa-project.org).
+
+The program VDR uses the DVB kernel driver of Linux to watch TV over
+DVB Satellite and record a transmission.  The developer version of VDR
+provides a plugin interface which allows the bitstreamout plugin to check
+for AC-3 streams of the current TV channel or replayed recording.  And
+if this is true the bitstreamout plugin can receive this stream via VDR.
+
+By receiving an AC-3 stream embedded in MPEG2 the bitstreamout plugin buffers
+and parse the MPEG2 TS (Transport Stream) or PES (Packetized Elementary Stream)
+for AC-3.  If AC-3 is found by the 32bit signature, the next four bytes are
+scanned for getting the audio sample rate, data section length which defines
+an AC-3 frame, and bsmod (bit stream mode).  It follows a checksum to verify
+the data section also called 'payload'.
+
+On success, a valid AC-3 frame, the method described in an older specification
+not found anymore at http://www.atsc.org/ (was in Annex B of ATSC_52.pdf)
+how to embed an AC-3 frame into a linear PCM (Pulse Code Modulation -- e.g.
+used on most audio CDROMs).  The technique uses a linear PCM period of 1536
+16bit stereo samples (6144 bytes) because every AC-3 frame is equivalent
+to such a period.  For a sample frequence of 48kHz the PCM period takes 32 ms.
+To identify such a PCM period as none audio data, the PCM period starts with
+a two 16bit word signature followed by two 16bit word which have the appropriate
+bits set for 'None Audio Data', 'Bit Stream MODe', and AC-3 frame size within
+the 1536 stereo samples.  The rest of the PCM period is padded with silent
+stereo samples upto the number of 1536 stereo samples.
+
+For the transport of a none audio PCM period, the S/P-DIF interface defined
+with IEC/ISO 60958 is opened in none audio mode with ALSA.  The IEC/ISO 60958
+often called IEC958 (see http://www.epanorama.net/documents/audio/spdif.html)
+specify how 16bit (or 20/24 bit) audio samples are transmitted with 32-bit
+words.  This scheme allows to transmit further informations about the PCM
+data coming with such a 32-bit word.  With these control bits the PCM data
+stream is marked as none audio data stream which enables an A/V receiver or
+amplifier to switch on its hardware decoder for Dolby Digital.

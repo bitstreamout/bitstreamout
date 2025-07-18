@@ -1,0 +1,83 @@
+#
+# Get the optimization of the used kernel
+#
+
+SUBARCH   := $(shell uname -i|sed -e s/i386/x86/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/)
+ARCH	  := $(SUBARCH)
+
+cc-option  = $(shell $(CC) $(1) -S -o /dev/null -xc /dev/null > /dev/null 2>&1 && echo "$(1)" || echo "$(2)")
+align     := $(subst -functions=0,,$(call cc-option,-falign-functions=0,-malign-functions=0))
+config.gz := $(wildcard /proc/config.gz)
+
+ifdef config.gz
+config	  := $(shell gzip -dc $(config.gz)|grep '^C')
+else
+ifeq ($(ARCH),x86)
+config	  := CONFIG_X86_GENERIC=y
+endif
+ifeq ($(ARCH),x86_64)
+config	  := CONFIG_GENERIC_CPU=y
+endif
+endif
+$(foreach conf,$(call config),$(eval $(conf)))
+
+cflags-y			+= $(call cc-option,-fmessage-length=0)
+cflags-y			+= $(call cc-option,-pthread)
+
+ifeq ($(ARCH),x86)
+
+MTUNE	  := $(call cc-option,-mtune=generic)
+
+ifneq ($(MTUNE),)
+tune	   = $(call cc-option,-mtune=$(1),$(2))
+else
+tune	   = $(call cc-option,-mcpu=$(1),$(2))
+endif
+
+cflags-$(CONFIG_M386)		+= -march=i386
+cflags-$(CONFIG_M486)		+= -march=i486
+cflags-$(CONFIG_M586)		+= -march=i586
+cflags-$(CONFIG_M586TSC)	+= -march=i586
+cflags-$(CONFIG_M586MMX)	+= -march=pentium-mmx
+cflags-$(CONFIG_M686)		+= -march=i686
+cflags-$(CONFIG_MPENTIUMII)	+= -march=i686 $(call tune,pentium2)
+cflags-$(CONFIG_MPENTIUMIII)	+= -march=i686 $(call tune,pentium3)
+cflags-$(CONFIG_MPENTIUMM)	+= -march=i686 $(call tune,pentium3)
+cflags-$(CONFIG_MPENTIUM4)	+= -march=i686 $(call tune,pentium4)
+cflags-$(CONFIG_MK6)		+= -march=k6
+cflags-$(CONFIG_MK7)		+= -march=athlon
+cflags-$(CONFIG_MK8)		+= $(call cc-option,-march=k8,-march=athlon)
+cflags-$(CONFIG_MCRUSOE)	+= -march=i686 $(align)-functions=0 $(align)-jumps=0 $(align)-loops=0
+cflags-$(CONFIG_MEFFICEON)	+= -march=i686 $(call tune,pentium3) $(align)-functions=0 $(align)-jumps=0 $(align)-loops=0
+cflags-$(CONFIG_MWINCHIPC6)	+= $(call cc-option,-march=winchip-c6,-march=i586)
+cflags-$(CONFIG_MWINCHIP2)	+= $(call cc-option,-march=winchip2,-march=i586)
+cflags-$(CONFIG_MWINCHIP3D)	+= $(call cc-option,-march=winchip2,-march=i586)
+cflags-$(CONFIG_MCYRIXIII)	+= $(call cc-option,-march=c3,-march=i486) $(align)-functions=0 $(align)-jumps=0 $(align)-loops=0
+cflags-$(CONFIG_MVIAC3_2)	+= $(call cc-option,-march=c3-2,-march=i686)
+cflags-$(CONFIG_MVIAC7)		+= -march=i686
+cflags-$(CONFIG_MCORE2)		+= -march=i686 $(call tune,core2)
+cflags-$(CONFIG_X86_ELAN)	+= -march=i486
+cflags-$(CONFIG_MGEODEGX1)	+= -march=pentium-mmx
+cflags-$(CONFIG_X86_GENERIC) 	+= $(call tune,generic,$(call tune,i686))
+
+endif
+
+ifeq ($(ARCH),x86_64)
+
+MTUNE	  := $(call cc-option,-mtune=generic)
+
+ifneq ($(MTUNE),)
+tune	   = $(call cc-option,-mtune=$(1),$(2))
+else
+tune	   = $(call cc-option,-mcpu=$(1),$(2))
+endif
+
+cflags-$(CONFIG_MK8)		+= $(call cc-option,-march=k8)
+cflags-$(CONFIG_MPSC)		+= $(call cc-option,-march=nocona)
+cflags-$(CONFIG_MCORE2)		+= $(call cc-option,-march=core2,$(call tune,generic))
+cflags-$(CONFIG_GENERIC_CPU)	+= $(call tune,generic)
+
+endif
+
+my::
+	@echo $(cflags-y)

@@ -1,0 +1,30 @@
+Pin layout of DVB-S 1.3
+=======================
+
+Parm | CVBS RGB OUT (default) | CVBS YC OUT            | YC OUT
+-----+------------------------+------------------------+-------------------
+Pin  | Signal                 | Signal                 | Signal
+-----+------------------------+------------------------+-------------------
+ 1   | Composite Video output | Composite Video output | Y - Luminance
+ 2   | +5V                    | +5                     | +5
+ 3   | Blue Video output      |  -                     |  -
+ 4   | SPDIF output           | SPDIF output           | SPDIF output
+ 5   | Green Video output     | Y - Luminance          |  -
+ 6   | Right Audio output     | Right Audio output     | Right Audio output
+ 7   | Red Video output       | C - Chroma             | C - Chroma
+ 8   | Left Audio output      | Left Audio output      | Left Audio output
+ 9   | Not Connected (IR)     | Not Connected (IR)     | Not Connected (IR)
+10   | Ground                 | Ground                 | Ground
+-----+------------------------+------------------------+-------------------
+
+NOTE: Pin 1 in the first row on the the right column:
+
+              10   9
+               8   7
+               6   5
+               4   3
+               2   1
+
+see also peitsche.png for the line out of newer DVB cards,
+s_vhs.png for possible connections on J2 and more detailed
+technotrend.png.

@@ -1,0 +1,51 @@
+ChangeLog		The change log
+COPYING			The GNU Public License (Version 2)
+AUTHORS			The authors of this source
+README			The readme
+Description		Description how about
+FILES			This file
+INSTALL			How to install
+Makefile		just type make
+Make.arch		get CPU type of the system
+PROBLEMS		Read
+vdr-bitstreamout.5	Read with `man -l'
+bitstreamout.c		The VDR plugin
+bitstreamout.h		  and its header
+iec60958.c		32 ms of none audio PCM
+iec60958.h		  and its header
+ac3.c			Embedd AC3 into PCM
+ac3.h			  and its header
+dts.c			Embedd DTS into PCM
+dts.h			  and its header
+lpcm.c			Use direct linear PCM
+lpcm.h			  and its header
+mp2.c			MP2, decode into PCM and use
+mp2.h			  and its header
+channel.c		Live TV and AC3 bitstreamout
+channel.h		  and its header
+replay.c		Replay and AC3 bitstreamout
+replay.h		  and its header
+pts.h			fiddeling with Presentation Time Stamps
+spdif.c			The bitstreamout to sound card
+spdif.h			  together with its header
+types.h			Types
+bounce.h		Fast ring buffer
+bytes.h			Byte handling class
+shm_memory_tool.c	Interface for shared memory
+shm_memory_tool.h	  and its header
+mute/cmi8738.sh		Shell script for (un)mute S/P-DIF of sound cards
+mute/README.soundblaster
+			There are more than one soundblaster around
+mute/soundblaster.sh	Shell script for (un)mute S/P-DIF of sound cards
+doc/CMI8738		Layout of S/P-DIF connectors on
+doc/Soundblaster_SBLive	URL about S/P-DIF connectors on (german only)
+doc/DVB-S1.3-J2		Layout J2 of DVB card
+doc/peitsche.png	  Picture about
+doc/s_vhs.png		  Picture about
+doc/technotrend.png	  Picture about
+tools/Makefile		Just an other Makefile
+tools/audio.sh		A script for debugging audio of VDR's -a stdout
+tools/xlist.c		The main program used by audio.sh
+tools/stripps.c		Strip private stream off from DVB recording
+tools/vob2vdr.c		Try to convert a VOB to a DVB recording
+tools/genindex.c	Generate index.vdr for vdr recordings

@@ -1,0 +1,87 @@
+
+      How use the bitstreamout plugin for VDR
+      =======================================
+
+Hardware:
+
+ * Required is an sound card with S/P-DIF out (optical or coax).
+
+ * For routing the digital out of the primary DVB card through a
+   sound card, the sound card should have a S/P-DIF in option.
+   Attention: The S/P-DIF in of the sound card should be able to
+   handle 5V input level (consumer S/P-DIF do have 0.5V signal level).
+   (see doc/ directory for more informations)
+
+ * If the sound card has an S/P-DIF in option and is able to set this
+   as input clock reference (Slave clock), just do it.  This avoids
+   over or underruns due different clocks for counting the sample
+   frequence (e.g. 48kHz reference from TV channel of the DVB isn't
+   the same than 48kHz derived from the quart on the sound card).
+
+Software:
+
+ * Required are the ALSA lib and header files together with the
+   appropriate ALSA modules for your sound card loaded.
+ 
+ * Required are the MAD lib and header files to be able to
+   compile the MP2 software decoder feature.
+
+ * Required is shm support.  Note: all Linux system should have this
+   support already in the kernel.  If your kernel does not provide
+   shm you have to activate shared memory filesystem in the kernel.
+   Don't to forget to reboot the system.
+   If shm is available, execute
+
+        mount -t shm shmfs /dev/shm
+
+   and you should see a line like this:
+
+        shmfs on /dev/shm type shm (rw)
+
+   Add the mount line below the line of activating swap (swapon)
+   within your boot scripts. Note that newer Kernel uses
+   the name
+
+       tmpfs
+
+   instead of shmfs.  Please be aware of that.
+ 
+ * Also the header files of the (newstruct) DVB driver should
+   be available (may at /usr/include/linux/dvb/ or at
+   ../../../../DVB)
+
+ * The header files of the VDR should be available, if not
+   type
+           make -C ../../../ include-dir
+
+ * Type make and if you've installed your VDR system not
+   within the source tree you have to install the plugin
+   found in ../../lib/libvdr-bitstreamout.so.<vdr_version>
+   at the appropriate place (e.g. /video or /var/spool/video).
+
+ * Type in
+
+           man -l vdr-bitstreamout.5
+
+   and read ;^)
+
+ * You may use mute.sh for muting the S/P-DIF out of the
+   sound card even if not used for AC3.  Note that this
+   script is designed for a C-Media PCI CMI8738 based sound
+   card. For your sound card type:
+
+          amixer controls | grep IEC958
+
+ * Try out (without `-a'):
+
+          vdr -P 'bitstreamout'
+
+   or
+
+          vdr -P 'bitstreamout -m <vdr_lib_dir>/mute.sh'
+
+   with <vdr_lib_dir> your library directory for vdr tools
+   (e.g. /usr/lib/vdr/ or /usr/local/lib/vdr/)
+
+ * If you're running on PROBLEMS read the file PROBLEMS!
+

@@ -1,0 +1,587 @@
+---------------------------------------------------------------
+Tue May 13 19:17:40 CEST 2008 - werner@suse.de
+
+- Make it build even with make plugins
+
+---------------------------------------------------------------
+Thu Apr 17 17:09:54 CEST 2008 - werner@suse.de
+
+- Scan always mpeg audio header in mad_frame_decode() as we
+  work around the buffer guard internal of mad_header_decode()
+- Do not delay first resulting PCM frame of mad_frame_decode()
+
+---------------------------------------------------------------
+Mon Apr  7 15:36:26 CEST 2008 - werner@suse.de
+
+- Support only VDR 1.6.0 and higher
+
+---------------------------------------------------------------
+Tue Mar 14 16:59:38 CET 2006 - werner@suse.de
+
+- Various cleanups and bug fixes
+- Try to get Mpeg Audio more lip sync
+
+---------------------------------------------------------------
+Wed Jun 22  9:12:24 CEST 2005 - werner@suse.de
+
+- Add recording check to avoid to run into Add/DelPid trouble
+- Use switching thread even for VDR 1.3.21+
+
+---------------------------------------------------------------
+Tue Jun  7 12:23:33 CEST 2005 - werner@suse.de
+
+- The ORF sample provided by a user has a large delay gap
+  therefore do not timeout after 3 seconds.
+
+---------------------------------------------------------------
+Mon Apr 11 12:24:55 CEST 2005 - werner@suse.de
+
+- Muting: Don't remove PAUSE flag at clearing spdif device
+
+---------------------------------------------------------------
+Thu Mar 24 19:24:23 CET 2005 - werner@suse.de
+
+- Add bug fix from Marcel Wiesweg in byte handle class
+- Add thread locking class based on cThreadLock to get a non
+  interrupted S/P-DIF forwarding in case of starting and
+  handling low state of the HW buffer of the sound card.
+
+---------------------------------------------------------------
+Thu Mar 24  8:24:33 CET 2005 - werner@suse.de
+
+- Drop workaround on VDR Add/DelPid bug for ptOther and the
+  handling on `Device or resource busy' because it breaks
+  replay part of the plugin.
+- Start the live forwarding thread by attaching the receiver,
+  requires a new logic to wait on the data stream and its type.
+- Make MP2 Audio more synchron
+- Be sure to store the correct name for PCMinitial
+- Do not flood the syslog with mp2 messages if burst size is
+  less than for layer II/III.
+
+---------------------------------------------------------------
+Wed Mar 16 19:40:10 CET 2005 - werner@suse.de
+
+- Speed up Sample generation from mp2
+- Small correction of burst size for layer III
+
+---------------------------------------------------------------
+Tue Mar 15  8:05:27 CET 2005 - werner@suse.de
+
+- Add nonlinear mp2 loop through S/P-DIF similar to AC3/DTS
+- Use a frame based mp2 parser for libmad with buffer gard
+- Make PCM initial wait frames configurable
+- Remove Z680 option
+- Remove MP2offset
+- Add a workaround for broken sub audio header in PS1 payloads
+- Be smarter in AV synchronization, wait on stable STC value
+- Make xlist find plain AC3 in PS1 payload even from ORF
+
+---------------------------------------------------------------
+Fri Feb 18  8:37:56 CET 2005 - werner@suse.de
+
+- Changes for VDR 1.3.21+
+
+---------------------------------------------------------------
+Tue Oct 26 16:43:59 CEST 2004 - werner@suse.de
+
+- Various cleanups and fixes for synchronization and NPTL
+
+---------------------------------------------------------------
+Sun Jul  4 19:33:17 CEST 2004 - werner@suse.de
+
+- More on compiler troubles
+- Some minor changes
+- Add hints about tmpfs
+
+---------------------------------------------------------------
+Thu Jun  3  9:29:32 CEST 2004 - werner@suse.de
+
+- Make compile on Hammer
+
+---------------------------------------------------------------
+Wed Jun  2  9:32:14 CEST 2004 - werner@suse.de
+
+- Change order within canceling threads
+- Use condition variable to sleep in switching thread
+
+---------------------------------------------------------------
+Sun May 30 21:05:05 CEST 2004 - werner@suse.de
+
+- Better AV sync after muting
+- Fix old bug in handling DVD streams and muting them
+
+---------------------------------------------------------------
+Fri May 29 16:16:48 CEST 2004 - werner@suse.de
+
+- Rewrite the scanning engines to be able to reset all
+  current values if we change Live channel or mute audio.
+- This solve also the broken start frames
+
+---------------------------------------------------------------
+Thu May 27 09:55:23 CEST 2004 - werner@suse.de
+
+- Change forwarding engine to send the PCM_WAIT frames in
+  correct order which depends on audio and none audio PCM.
+- Be sure only to use a unique PTS value even if frames
+  may fail. Therefore start forwarding engine only if we
+  cross a PES boundary and have a PTS value.
+- Add frame counting for LiveTV to be able to start the
+  forwarding engine as fast as possible.
+
+---------------------------------------------------------------
+Thu May 20 08:32:11 CEST 2004 - werner@suse.de
+
+- Change soundblaster mute script to be be configurable
+  for more than on soundblaster type.
+- Add README for soundblaster mute script
+
+---------------------------------------------------------------
+Tue May  4 09:34:14 CEST 2004 - werner@suse.de
+
+- Reenable the deactivation of the plugin
+- Remove thread locking within forwarding thread which
+  may cause locks.
+
+---------------------------------------------------------------
+Fri Apr 30 21:10:48 CEST 2004 - werner@suse.de
+
+- Simply continue to get next pcm frame if PTS != STC
+- Compare system clock delay with STC delay and only if
+  both clocks are in sync we assume that STC is stable
+- Switch back to frame repeat instead of sample repeat
+  even for real audio. 
+
+---------------------------------------------------------------
+Wed Apr 28 09:06:46 CEST 2004 - werner@suse.de
+
+- Try to solve delay detection to get the min start delay
+- Don't repeat frames but stereo samples in case of audio
+
+---------------------------------------------------------------
+Wed Apr  7 19:28:30 CEST 2004 - werner@suse.de
+
+- Fix boolean cut&paste error in shm_malloc()
+- Lock threads in Live Receiver and also in
+  S/P-DIF forwarding thread.
+
+---------------------------------------------------------------
+Fri Mar 26 20:25:28 CET 2004 - werner@suse.de
+
+- Use always cDevice::CurrentChannel() in ChannelSwitch() to
+  be sure to get always the live channel on the primary card.
+
+---------------------------------------------------------------
+Tue Mar 23 08:07:53 CET 2004 - werner@suse.de
+
+- Be sure that we do not get a SIGSEGV if terminated
+- Add a further delay value for LiveTV
+- Try out some DTS sanity checks
+- Add some kernel version magic to shm_memory_tool
+
+---------------------------------------------------------------
+Fri Jan  9 18:50:31 CET 2004 - werner@suse.de
+
+- Make some compiler happy
+
+---------------------------------------------------------------
+Thu Jan  8 23:35:09 CET 2004 - werner@suse.de
+
+- Fix bug in MP2Decoder::pushData(): use stream not m_stream
+  for sync start check.
+- Enhance MP2Decoder::pushData(): return the used data length
+  to be able to increase the data pointer address. This helps
+  to avoid to skip buffer of the overrun at start time.
+- Fix bug in mp2.c: Be sure that buffer is only refilled if
+  really emptied.
+- Fix bug in channel.c: do not clear boundary flag at the end
+  because data frames in payload may overlap (MP2 audio)
+- Enhance STC/PTS check by using a timer of 2 seconds
+- spdif.c: Audio/Video delay can differ upto two GOPs which is
+  upto one second for PAL.
+- Fix the changes for ALSA lib 1.0
+- Try to make it work with VDR 1.3.0
+
+---------------------------------------------------------------
+Sat Dec 20 17:39:18 CET 2003 - werner@suse.de
+
+- Change cHandle macros to avoid confict with autopid includes
+- Make setup bits available to spdif class
+- Enhance synchronization
+  * Handle Mute and Pause different
+  * Set delay to zero
+  * After sleeping on input check if spdif should be closed
+  * Workaround for 33bit bug of av711x DVB card for STC values
+  * Avoid deadlock due buffer overrun
+- Fix audio pid change
+  * Use mutex for better protection
+  * Do not switch back if an other audio type is choosen
+  * Make language change possible in bitstreamout menu
+- Fix SHM usage: initialize it only once, free up on exit
+
+---------------------------------------------------------------
+Mon Dec  1 11:54:47 CET 2003 - werner@suse.de
+
+- Use a break point for check for valid STC values, do not
+  reject for ever but only for the first 320 ms invalid STCs
+- Always reset current position in TS scan if STC fails
+
+---------------------------------------------------------------
+Fri Nov 28 11:15:20 CET 2003 - werner@suse.de
+
+- Do NEVER attach any receiver if replay stops, this will done
+  by ChannelSwitch.
+- Be sure that STC values of DVB card are valid
+- Start audio out only if an uptodate PTS value is found
+- Be sure that mute stays even if we do FF or FB during replay
+- Simplify the AttachReceiver routine, no recursion needed
+
+---------------------------------------------------------------
+Tue Nov 24 21:34:35 CET 2003 - werner@suse.de
+
+- Get docs uptodate.
+- Use compile time switches for newer ALSA versions.
+- Add some workarounds against initial hw soundbuffer underrun.
+- Add protection against mad driving realtime thread.
+- Fix remaining bugs
+
+---------------------------------------------------------------
+Tue Nov 18 15:31:30 CET 2003 - werner@suse.de
+
+- First try to integrate Svens MP2 part.
+
+---------------------------------------------------------------
+Tue Nov 11 10:00:00 CEST 2003 - sven AT jausoft dot com
+
+- shm_malloc as non_root (Olaf Titz)
+- Make.arch cleanup (Werner) 
+- added shm usage hint in INSTALL
+- added werners patches (2003-11-11)
+- needs vdr >= 1.2.6pre6 - no more extra STC patch !
+
+---------------------------------------------------------------
+Tue Nov 02 10:00:00 CEST 2003 - sven AT jausoft dot com
+
+- finished analysing the a/v sync problema:
+	- we have no chance in live mode to sync,
+	  'cause our receiver _might_ receive audio packets
+	  too late - all the time (about 5-70ms).
+	  	- there is no kinda "prefetch" thing ..
+	- only in playback/transfer mode, we are in sync !
+	- so we skip all actions to stay in sync
+		
+- patch dvbplayer.c,transfer.h and transfer.c with:
+	vdr-1.2.6-mp2PlayAudio-v4.diff
+  - this one is a bug fixed one
+  - now you can select 2 + 1 audio streams (2 audio + 1 dolby)
+  - dolby is now again the very first default audio, if available !
+  - transfer mode uses the same logic as dvbplayer now !
+
+---------------------------------------------------------------
+Tue Oct 30 12:25:00 CEST 2003 - sven AT jausoft dot com
+
+- modified cDevice::getSTC
+	- added argument ePidType
+	- added protected method cDevice::GetPidHandle
+	- just apply the patch
+	     vdr-1.2.6-device-getSTC-v2.diff
+- temp. removed "sleeping" or "skip" action
+- live-view (channels.c): moved mp2->pcm decoding to play site..
+- learned, that a "delay" of < -300 is really in sync, see replay!
+- achive about -5 .. -30 delay .. nearly in sync
+- removed obsolete mp2.h, mp2.c
+- to see PTS delays just edit pts.h and activate debug_pts
+
+---------------------------------------------------------------
+Tue Oct 27 02:06:00 CEST 2003 - sven AT jausoft dot com
+
+- introducing getSTC in device:
+	vdr-1.2.6-device-getSTC.diff
+  to achieve the stream time counter (stc) timestamp,
+  to support a/v sync
+- pts is now using stc .. currently only in channels.
+- switch delay to _zero_, to make pts able to sync ..
+
+---------------------------------------------------------------
+Tue Oct 27 02:06:00 CEST 2003 - sven AT jausoft dot com
+
+- pts process action is off (commented out), 'cause we have to
+  wait for a solution, where the dvb driver will tell us,
+  the correct just played timestamp ..
+- introducing MP2 switch enable/disable
+	- meaningfull if you have a S/P Dif loop through
+
+---------------------------------------------------------------
+Tue Oct 22 02:06:00 CEST 2003 - sven AT jausoft dot com
+
+- update dvd plugin to vdr-dvd-0.3.4-rc6
+- take better care of case than more then one audio streams
+  appears .. the 1st one wins ..
+- recording playback (dvbplayer), to use MP2/AC3 properly,
+  patch dvbplayer.c with:
+	dvbplayer.1.2.6pre2-mp2PlayAudiov2.diff
+  - this one is a bug fixed one
+  - now you can select 2 + 1 audio streams (2 audio + 1 dolby)
+- added cPlayer audio track selection within main menu as well
+- moved PTS processing into pts.h, where it belongs
+- added abstraction of decoder -> AnyDecoder
+- replay uses cPTS::process as well ..
+
+---------------------------------------------------------------
+Tue Oct 20 20:06:00 CEST 2003 - sven AT jausoft dot com
+
+- added audio pid selection in main menu
+	- if used and selected != vdr_selection,
+	  further vdr_selections (apid) is blocked
+- shm_malloc
+	- new malloc offering flags argument
+- using shm_malloc with SHM_SHARED flag -> mmap works.
+- removed a deadlock spdif::Clear(exit==true) if mmap is used
+- bugfixed PTS usage
+	- respecting the ptsflag 
+	- trying a new pts_diff, time_diff calc .. (??)
+- mp2 hardsync fixed
+
+---------------------------------------------------------------
+Tue Oct 20 05:06:00 CEST 2003 - sven AT jausoft dot com
+
+- Added mp2 -> pcm decoding
+	- Using libmad 
+		- mp2_decoder.[ch]
+	- LiveView (channels.c) with an "observer" thread 
+	  to know if AudioSwitch has happen.
+	- player's, dvd, ..., first audio stream's tracknumber win's
+	- recordings (dvbplayer), to use MP2 patch dvbplayer.c:
+		dvbplayer.1.2.6pre-mp2PlayAudio.diff
+	- using PTS information (using pts.h now), 
+	  currently only audio_pts < now (audio is too late)
+	  looks like to work .. -> skip mp2 packages 
+	  earlier PTS infos are ignored ..
+
+- cPTS::done() fix 
+	- adding "gettimeofday(&ts, 0);" at the end ..
+
+- added a whole lot of debug statements to debug ;-)
+  and as a little documentation ..
+
+- changed threading lockings
+	- cInStream will be detached by super destructor
+	- added more test_flag checks
+	- all while(test_flag(RUNNING)) deactivators,
+          check if the thread is really running at last 
+	- ...
+
+- Added little MainMenu ..
+	- on/off
+	- Mp2Dither ..
+	- delay
+	- audio track info in title, of channel
+
+---------------------------------------------------------------
+Tue Oct 14 17:03:23 CEST 2003 - werner@suse.de
+
+- Better overrun handling in S/P-DIF interface
+- Fix soft float handling
+
+---------------------------------------------------------------
+Tue Oct 14 13:06:00 CEST 2003 - werner@suse.de
+
+- Fix new skip feature for overflow handling
+- Remove initial RUNNING check for stopping Action threads
+- Use unsigned long for flags to help new compilers
+
+---------------------------------------------------------------
+Mon Oct 13 17:30:50 CEST 2003 - werner@suse.de
+
+- Reorder some scripts, code and create a new tool xlist
+  and audio.sh for debugging various mpeg2 streams.
+- Use skip indicator instead of usleep to ensure that
+  Receive and Play return as fast as possible to main VDR.
+
+---------------------------------------------------------------
+Tue Okt 12 04:39:01 CEST 2003 - sven goethel AT jausoft dot com
+
+the following changes enables me to use this nice plugin 
+stable and flawless with the dvd plugin and under heavy load:
+
+- Introduced locked shared memory for the ringbuffer.
+  The advantage should be to force the memory within RAM,
+  and to increase the buffer to: KILOBYTE(16*64)
+  Since then .. i can listen to LiveTV + 3 transfer mode:
+       - 2 x recording
+       - 1 transfer to view
+- Added ACTIVEDEBUG macro to enable DEBUG_ACTIVE, 
+  for debugging purposes
+- Activate(false) will continue, if (!test_flag(RUNNING)),
+  the former goto out; result in a deadlock (dvd ..)
+  on heavy buffer overflow ..
+- cBounce::store(...) returns boolean, true if successfull,
+  false if buffer overflow.
+  if store fails, the usage within cReplayOutAC3::Play 
+  and cInStream::Receive does a 5ms sleep 
+  to protect against overloading ..
+
+---------------------------------------------------------------
+Tue Sep 23 15:26:01 CEST 2003 - werner@suse.de
+
+- Fix transfer mode detection from primary to primary device,
+  should stop staccato in case of recording on primary device.
+- Remove LOCK_THREAD from Activate() class members.
+- Use bits and bitmasks even for setup to have a better usage
+  of the CPU's cache line.
+
+---------------------------------------------------------------
+Tue Sep 16 19:12:11 CEST 2003 - werner@suse.de
+
+- Reset threshold of ringbuffer before data transfer, should
+  fix the start delay of audio and therefore A/V sync
+- Use bits and bitmasks instead of various booleans to get
+  the remaining integer into the CPU's cache line.
+- Speed up the TS scanner by unrolling some loops.
+
+---------------------------------------------------------------
+Tue Aug  5 15:31:30 CEST 2003 - werner@suse.de
+
+- Better scanning of audio substream headers
+
+---------------------------------------------------------------
+Fri Jun 13 15:44:01 CEST 2003 - werner@suse.de
+
+- Add vdr-1.2.1-audio.dif
+- Try to increase rtc clock for ALSA
+- Use cDevice::ActualDevice() for tranfer check
+
+---------------------------------------------------------------
+Mon May 19 08:09:07 CEST 2003 - werner@suse.de
+
+- Add vdr-1.1.32-audio.dif
+
+---------------------------------------------------------------
+Wed Apr 23 11:56:50 CEST 2003 - werner@suse.de
+
+- Drop Thread Local Storage usage for now
+- Add audio patch for VDR 1.1.28
+
+---------------------------------------------------------------
+Tue Apr 15 07:55:10 CEST 2003 - werner@suse.de
+
+- Add some more comments to PROBLEMS
+- Use dynamic generation of used period size to get a integer
+  divisor of the burst size
+- Add patch for VDR 1.1.27
+- Add patches for DVB driver 2003-04-08 and dvb-2003-04-14
+- Simplify muting in Pause followed by Stop/Blue 
+- Be compatible with g++ 3.2/3.3 on inlined functions
+- Make make working even if called via make plugins
+
+---------------------------------------------------------------
+Thu Mar 27 22:33:11 CET 2003 - werner@suse.de
+
+- New option `-o' or `--onoff' for enabling main menu entry
+  and update of the manual page.
+- Use common memory for all buffers for better alignment and
+  less memory consumption
+
+---------------------------------------------------------------
+Tue Mar 25 09:28:13 CET 2003 - werner@suse.de
+
+- Add main menu entry for On/Off of bitstreamout plugin
+
+---------------------------------------------------------------
+Fri Mar 21 08:13:44 CET 2003 - werner@suse.de
+
+- Repeat last AC3 frame if CRC error occurs.
+- Replay/Pause: unmute on close if primary device is not mute
+
+---------------------------------------------------------------
+Thu Mar 20 09:47:14 CET 2003 - werner@suse.de
+
+- Underruns within twice of the frame length should be
+  catch now by the plugin.  This does not help for
+  longer and repeated underruns caused by high system load.
+
+---------------------------------------------------------------
+Wed Mar 12 21:37:37 CET 2003 - werner@suse.de
+
+- Fix long standing bug in spdif writei mapping and remove
+  remark in PROBLEMS about switching IO/mmap transfer
+
+---------------------------------------------------------------
+Wed Mar 11 09:55:11 CET 2003 - werner@suse.de
+
+- Rework Mute feature
+- Fix bug in TS scanner (reset variables on boundary check)
+- Implement an overrun protection (sorry only by frame drop)
+- Update alsa-lib.dif
+- Add vdr-1.1.25-audio.dif
+- Add a remark in PROBLEMS about other plugins which causes
+  audio sync loose and/or drop outs
+- Add a remark in PROBLEMS about trouble with switching
+  between IO and mmap based audio transfer
+
+---------------------------------------------------------------
+Wed Feb 19 21:44:22 CET 2003 - werner@suse.de
+
+- Remove locking of control bits in spdif class because
+  all is running in one thread to reduce load.
+- Use temporary copy of options which cause the user to press
+  the OK button
+- Allow to reset a failed state after new options
+- Avoid locking for check of available date in ring buffer
+  to reduce load
+
+---------------------------------------------------------------
+Tue Feb 18 19:10:55 CET 2003 - werner@suse.de
+
+- Fix for newer compilers
+
+---------------------------------------------------------------
+Tue Feb 18 09:55:07 CET 2003 - werner@suse.de
+
+- Move from spdif.con to the setup interface of VDR
+- Rewrite manual page to describe options and settings
+- Enhance linear PCM detection
+- Fix bug in underrun detection
+- Start wrapper only at frame boundaries which should remove
+  any staccato effect
+- Check bounce buffer before sleeping on next frame which
+  should avoid video distortion after mute due high CPU load
+- Add warning about none audio linear PCM
+
+---------------------------------------------------------------
+Tue Feb 11 09:19:27 CET 2003 - werner@suse.de
+
+- Speed up swab()
+- Fix scanning of private stream, the data stream in the pay
+  load may or may not be aligned at the very beginning
+- Allow also DTS and linear PCM by setting the stream type
+  dynamically at first start
+- Patch for AC3overDVB patch to get plugin work in replay mode
+
+---------------------------------------------------------------
+Thu Jan 30 19:01:09 CET 2003 - werner@suse.de
+
+- Workaround for transfer mode
+- Cleanup
+- New VDR patches
+
+---------------------------------------------------------------
+Wed Jan 29 12:29:19 CET 2003 - werner@suse.de
+
+- gcc does not like the dprintf macro, the libc has its own
+- Use -funroll-loop and -D_GNU_SOURCE
+- Standard include shouldn't be used again.
+- Add INSTALL
+- Add some more informations about DVB card at doc/
+
+---------------------------------------------------------------
+Tue Jan 28 12:38:12 CET 2003 - werner@suse.de
+
+- VDR 1.1.22 requires a patch, add it.
+
+---------------------------------------------------------------
+Tue Jan 28 00:00:23 CET 2003 - werner@suse.de
+
+- Make Live and Replay/Recording work together
+
+---------------------------------------------------------------

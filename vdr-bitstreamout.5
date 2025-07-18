@@ -1,0 +1,293 @@
+'\" t
+.\"
+.TH vdr\-bitstreamout 5 "March 18, 2005" "Version 0.81" "Plugin for VDR"
+.UC 5
+.SH NAME
+bitstreamout \- audio streams out to \fBS/P\-DIF\fR of sound cards
+.SH SYNOPSIS
+Start of plugin bitstreamout:
+.br
+.in +1c
+.BR vdr\  [ ... ]
+.BR \-P\  ' bitstreamout
+.RB [ \-o]
+.RB [ \-m\fIscript\fB ]'
+.in -1c
+.PP
+Configuration of plugin bitstreamout by
+.B Setup
+menu:
+.br
+.nf
+.in +1c
+.BR Setup
+.in +1c
+.RB   +->\  Plugins
+.in +2c
+.RB   +->\  bitstreamout
+.in -4c
+.fi
+.PP
+.RS 2l
+.TS
+;
+| l | l | c |.
+_
+Option	Default value	Possible values
+_
+\fBOn/Off\fR	\fBOn\fR	\fBOn\fR/\fBOff\fR
+\fBMp2Enable\fR	\fBOn\fR	\fBOn\fR/\fBOff\fR
+\fBMp2Out\fR	\fBDither\fR	\fBRound\fR/\fBDither\fR/\fBNonlinear\fB
+\fBCard\fR	\fB0\fR	[\fB0 ... \ 7\fR]
+\fBDevice\fR	\fB2\fR	[\fB0 ... 31\fR]
+\fBDelay\fR	\fB0\fR	[\fB0 ... 32\fR]
+\fBLiveDelay\fR	\fB0\fR	[\fB0 ... 32\fR]
+\fBPCMinitial\fR	\fB0\fR	[\fB4 ... 12\fR]
+\fBMp2offset\fR	\fB0\fR	[\fB0 ... 12\fR]
+\fBIEC958\fR	\fBCon\fR	\fBCon\fR/\fBPro\fR
+\fBVariableIO\fR	\fByes\fR	\fBYes\fR/\fBNo\fR
+\fBMemoryMap\fR	\fBno\fR	\fBYes\fR/\fBNo\fR
+_
+.TE
+.RE
+.PP
+This is a VDR plugin to redirect \fBAC\-3\fR, \fBDTS\fR and \fBMP2 Audio\fR
+(\fBMpeg Audio Layer II\fR) endcode audio data frames or \fBlinear PCM\fR decoded
+audio frames towards to an external decoder/amplifier through the \fBS/P\-DIF\fR
+interface of a sound card.
+.B Encoded
+audio frames will
+.B not
+be decoded due Copyright/License restrictions of the required algorithms
+but embedded into \fBPCM\fR frames accordingly to
+.B IEC 61937
+for loop through the result over a sound card to the appropriate hard ware.
+.PP
+The loop through of \fBlinear PCM\fR get from VDR works only for real
+\fBAudio PCM\fR.  For
+.BR "nonlinear PCM" ,
+e.g. as a result of an external encoded audio frame
+wrapper, may work only if the correct frame start is found.  This may
+not work for all \fBPCM\fR streams and can destroy the high frequency drivers
+of your loudspeakers (see
+.BR WARNING ).
+.PP
+.B Bitstreamout
+is written for the Advanced Linux Sound Architecture (ALSA). It was
+tested on a Trident 4DWave NX and CMIPCI based card. A DTT2500 and
+VSA\-E07 was hooked up to the \fBS/P\-DIF\fR interface. It should work with most any
+external \fBAC\-3\fR decoder.  Other sound cards may work, please check the ALSA site
+.B http://www.alsa\-project.org
+for \fBS/P\-DIF\fR out capable cards that are supported.
+.\"
+.SH WARNING
+.\"
+This program is distributed in the hope that it will be useful,
+but
+.BR "Without Any Warranty";
+without even the implied warranty of
+.B Merchantability
+or
+.BR "Fitness For A Particular Purpose" .
+See the
+.I GNU General Public License
+for more details.
+.\"
+.SH OPTIONS
+.\"
+.SS The plugin
+The plugin its self can take two options:
+.TP
+.B \-m, \-\-mute=\fIscript\fB
+use this script
+.I script
+for switching the \fBS/P\-DIF\fR
+.B on
+or
+.BR off.
+The script should be able to read on option key word
+which is
+.B on
+either
+.B off
+for enabling respectively disabling the \fBS/P\-DIF\fR interface
+of the sound card.  This is useful if the \fBS/P\-DIF\fR out
+of the DVB card is routed through the \fBS/P\-DIF\fR interface of
+the sound card.  Such a script can be written `in'
+.BR bash (1)
+using
+.BR amixer (1).
+.TP
+.B \-o, \-\-onoff
+to enable an control entry in the main menu of VDR to
+change the values of the plugin.  This menu includes
+the possibility to switch between audio tracks (\fBAC\-3\fR and \fBMP2 Audio\fR).
+An further menu is available under the main configuration
+at point plugins.
+.B On
+or
+.BR Off.
+.P
+.SS The configuration setup
+The configuration setup (see
+.BR SYNOPSIS )
+has the following options:
+.TP
+.B On/Off
+Enable or disable the bitstreamout plugin.
+.TP
+.BR IEC958\  ( Con ,  Pro )
+If
+.I Con
+is chosen the IEC(60)958 (\fBS/P\-DIF\fR) consumer mode (this is the default)
+is used.  For
+.I Pro
+the IEC(60)958 (\fBAES-3\fR) professional mode is used.
+The correct and supported value may depend on the used sound card.
+.TP
+.BR Card\  [ 0 ... 7 ]
+The given number is one of the card numbers provided by ALSA at
+.IR /proc/asound/card<#>
+.TP
+.BR Device\  [ 0 ... 31 ]
+Select the hardware device of the chosen card above by the numbers
+provided by ALSA at
+.IR /proc/asound/card<#>/pcm<#>p/ .
+.TP
+.BR MemoryMap\  ( Yes , No )
+The setting
+.I yes
+Force
+.B bitstreamout
+to use memory mapping for \fBPCM\fR data transfer. Whereas
+.I no
+switch to ioctl based \fBPCM\fR data transfer which is the default.
+The correct supported value may depend on the used sound card.
+Be carefully, some ALSA driver may not be able to use memory
+mapping for \fBAC\-3\fR data.
+.TP
+.BR Delay/LiveDelay\  [ 0 ... 32 ]
+With this you can set the initial delay time of the sound
+to get video and audio synchrony in replay and live mode
+at your view position.
+Choose a number of silent stereo \fBPCM\fR frames with
+.B 10ms
+delay aka
+.B 33cm
+for each frame.
+These frames will used before the first audio frame from VDR
+is forwarded to the sound card.
+Possible values are 0 upto 32, default are 0 pieces aka
+0cm which is prefect for C\-Media PCI CMI873 sound card and
+Pioneer VSA\-E07.
+.TP
+.BR PCMinitial\  [ 4 ... 12 ]
+The numbers of initial PCM wait frames to reset the parser
+and decoder of your A/V receiver at LiveTV.  As larger the
+number as more your A/V receiver can synchronize but only
+up to the maximal filling grade of its input buffer.
+If the value is to large you
+.B will
+hear a large silent pause. You should then decrease the value.
+A good value for, e.g. Pioneer VSA\-E07 is 6.
+Small values may cause an underrun of the hardware buffer
+of your soundcard, which can be heard as a short staccato
+or reset (see \fBVariableIO\fR) initial after a channel switch.
+.TP
+.BR VariableIO\  ( Yes , No )
+Handle buffer underruns of the sound cards buffer in the case
+that the reference clock of the card is faster than the
+rate of the DVB live stream.  Overruns can
+.B not
+be handled due to the problem that every audio frame represents
+exactly, e.g. in the case of \fBAC\-3\fR 1536 16 bit audio sample and
+no frame nor sample can be dropped without noisy stream leaks
+(on the other sides it seems possible in the case of an underrun
+to send send some frames twice for filling the sound cards buffer).
+.TP 
+.BR Mp2Enable\  ( On , Off )
+Enable or disable the MP2 part of the bitstreamout plugin.
+Not that if you use hardware loop through from the DVB \fBS/P\-DIF\fR
+out to the sound cards \fBS/P\-DIF\fR in connector you should disable
+this feature.  This because the hardware of the DVB card can
+do a much better synchronization of Audio and Video.
+.TP
+.BR Mp2Out\  ( Round , Dither , Nonlinear )
+Switch for the configuration how to use the \fBMP2 Audio\fR input stream
+from VDR at replaying a recording or during live viewing from DVB card.
+
+The two cases
+.BR Round\  and\  Dither
+are switches for the resulting \fBlinear PCM\fR which its self
+will be obtained by decoding the
+.B MP2 Audio
+input stream with the help of the
+.BR LibMad.
+.BR Dither ing
+leads to a much better sound quality then
+.BR Round ing
+it does.
+
+The
+.B Nonlinear
+option provides an alternative way how to put
+.B MP2 Audio
+data forward to the A/V receiver.  With this the
+.B MP2 Audio
+will
+.B not
+be decoded but send with a simliar method as done for \fBAC\-3\fR or
+\fBDTS\fR input streams.
+If and only if your
+A/V receiver supports the decoding of
+.B MP2 Audio
+stream you may choose this option. But
+.B note
+that for daily use your A/V receiver should support automatic
+detection of \fBMP2 Audio\fR.
+Or you have to configure your A/V receiver by hand for every
+change between \fBAC\-3\fR, \fBDTS\fR and \fBMP2 Audio\fR input sources.
+.TP
+.BR MP2offset\  [ 1 ... 12 ]
+An additional offset only for for \fBMP2 Audio\fR.  On very fast
+systems the decoded \fBlinear PCM\fR may reach the AV receiver to
+early.  You can reach the AV synchronization with steps of 10ms
+silent \fBlinear PCM\fR.
+.TP
+
+.LP
+.SH EXAMPLE
+.sp 1
+.in +1c
+.nf
+/usr/bin/vdr \-P 'bitstreamout \-m /usr/lib/vdr/mute.sh'
+.fi
+.in -1c
+.LP
+.SH AUTHOR
+\fBAC\-3\fR scanning part \-\-  Aaron Holtzman
+.br
+\fBMP2\fR implementation \-\- Sven Goethel <sven@jausoft.com>
+.br
+\fBMP2\fR frame based libmad handling \-\- Werner Fink <feedback@suse.de>
+.br
+Plugin part \-\- Werner Fink <feedback@suse.de>
+.LP
+.SH FILES
+.in +1c
+.I @@VIDEODIR@@/setup.conf
+.br
+.I /proc/asound/card<#>/pcm<#>p/
+.br
+.I /proc/asound/card<#>/pcm<#>p/info
+.br
+.I /etc/asound.state
+.in -1c
+.SH SEE ALSO
+.BR ac3play (1),
+.BR vdr (1),
+.BR vdr (5),
+.BR aplay (1),
+.BR alsactl (1),
+.BR amixer (1),
+.BR alsamixer (1).

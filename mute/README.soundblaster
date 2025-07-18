@@ -1,0 +1,53 @@
+      The mute script for soundblaster cards
+      ======================================
+
+First of all:
+
+    There are many soundblaster cards available,
+    therefore this script may not work without
+    modification!
+
+To test the script you may call the script by
+hand with
+
+    soundblaster.sh on
+
+respectivly
+
+    soundblaster.sh off
+
+There should no error message in both cases and
+the soundblaster should be unmuted respectivly
+muted in a very short time (less than one ms).
+
+The script assumes that your soundblaster card
+is the first card in the system (card number 0).
+See line 30 to change this.
+
+If this does not work for your card you may
+do a copy of the script and modify this copy
+at line 41ff.  Does your soundblaster provide
+3D effects or not? Does your soundblaster provide
+special surround effects or not?
+
+If this does not help you may read the output of
+
+    amixer controls | less
+
+to see, if you have other switches.  To route
+AC-3 data through a soundblaster card, there
+should be _no_ modifications of the data stream
+because this would break the AC-3 data therein.
+Therefore the _raw_ data should be provided
+to the S/P-DIF coax or optical out.
+Try out to modify the found switches by using
+
+    alsamixer
+
+within a terminal, remember the reqired switches
+and modify your copy of the soundblaster.sh script.
+
+Last note:
+
+   Please provide your working script by email with
+   a short description of your soundblaster card.

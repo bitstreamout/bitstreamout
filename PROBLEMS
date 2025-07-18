@@ -1,0 +1,54 @@
+      Known problems with bitstreamout plugin for VDR
+      ===============================================
+
+* Required is shm support.  Note: all Linux system should have this
+  support already in the kernel.  If your kernel does not provide
+  shm you have to activate shared memory filesystem in the kernel.
+  Don't to forget to reboot the system.  If shm is available and
+  not already used (e.g. for udev with mounted /dev), execute
+
+	mount -v -o mode=1777 -t tmpfs tmpfs /dev/shm
+
+  and you should see a line like this:
+
+	tmpfs on /dev/shm type shm (rw)
+
+  Add the mount line below the line of activating swap (swapon)
+  within your boot scripts if you system boot script not already
+  do this.
+
+* Do NEVER use the `-a' option of VDR in combination
+  with the bitstreamout plugin.  NEVER, because
+  both try to open the S/P-DIF of your sound card
+  and the first block the other.
+
+* If you're using the configuration `Nonlinear' for the option
+  `Mp2Out' and your hear nothing or your speakers are very noisy
+  you may switch your A/V receiver into Mpeg Audio mode or, if
+  your A/V receiver does not support Mpeg Audio you should use
+  `Dither' for the option `Mp2Out'.
+
+* If you've problems with the command
+
+        make plugins
+
+  in the main directory of VDR you should set a
+  symbolic link in the directory PLUGINS/src/
+
+        ln -sf bitstreamout-<version> bitstreamout
+
+  with e.g. <version>=0.45b -> see PLUGINS.html.
+
+* Please use VDR 1.6.0 and higher.
+  For any user of DVB cards from TT and similar, please
+  load the module dvb-ttpci(.o) with the option hw_sections=0
+  to switch off the scan of the EPG data on the card
+  its self. This because this will be done by VDR.
+
+* This plugin for VDR 1.6.0 and higher requires ALSA
+  1.0.0 and higher.
+
+* Some other plugins (old teletext plugin?) ar known to cause
+  problems with audio synch loose or dropouts due to missing
+  ringbuffer feature and/or time consuming scanner in the
+  Receive() part instead of returning as fast as possible.

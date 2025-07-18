@@ -1,0 +1,4 @@
+Authors of (vdr-)bitstreamout plugin.
+
+Werner Fink <werner@suse.de>. Idea, design and implementation.
+Sven Goethel <sven@jausoft.com>. The mp2 part and its implementation.

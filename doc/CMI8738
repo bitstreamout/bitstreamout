@@ -1,0 +1,19 @@
+
+      C-Media PCI CMI8738 based sound cards
+      =====================================
+
+Warning: there are CMI8738 chips which do not have S/P-DIF in/out!
+
+Besides this a C-Media PCI CMI8738 based sound card or onboard
+sound chip should have a 2x8 pin connector block with pin 3 empty:
+
+  Left AUX in     1  2   Right AUX in
+  Empty           3  4   Ground
+  S/P-DIF in      5  6   Ground
+  S/P-DIF out     7  8   Ground
+
+There exist some extension boards (optical and/or coax S/P-DIF in
+and/or S/P-DIF out).  Some of these extension boards also have
+a jumper to use further 2 pin connector for PC internal S/P-DIF.
+
+Read more in /usr/src/linux/Documentation/alsa/CMIPCI.txt
